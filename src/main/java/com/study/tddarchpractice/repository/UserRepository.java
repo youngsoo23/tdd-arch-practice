@@ -1,6 +1,6 @@
 package com.study.tddarchpractice.repository;
 
-import com.example.demo.model.UserStatus;
+import com.study.tddarchpractice.model.UserStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

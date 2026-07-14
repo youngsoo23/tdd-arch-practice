@@ -1,11 +1,11 @@
 package com.study.tddarchpractice.service;
 
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.dto.PostCreateDto;
-import com.example.demo.model.dto.PostUpdateDto;
-import com.example.demo.repository.PostEntity;
-import com.example.demo.repository.PostRepository;
-import com.example.demo.repository.UserEntity;
+import com.study.tddarchpractice.exception.ResourceNotFoundException;
+import com.study.tddarchpractice.model.dto.PostCreateDto;
+import com.study.tddarchpractice.model.dto.PostUpdateDto;
+import com.study.tddarchpractice.repository.PostEntity;
+import com.study.tddarchpractice.repository.PostRepository;
+import com.study.tddarchpractice.repository.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

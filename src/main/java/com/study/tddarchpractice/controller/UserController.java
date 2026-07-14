@@ -1,10 +1,11 @@
 package com.study.tddarchpractice.controller;
 
-import com.example.demo.model.dto.MyProfileResponse;
-import com.example.demo.model.dto.UserResponse;
-import com.example.demo.model.dto.UserUpdateDto;
-import com.example.demo.repository.UserEntity;
-import com.example.demo.service.UserService;
+
+import com.study.tddarchpractice.model.dto.MyProfileResponse;
+import com.study.tddarchpractice.model.dto.UserResponse;
+import com.study.tddarchpractice.model.dto.UserUpdateDto;
+import com.study.tddarchpractice.repository.UserEntity;
+import com.study.tddarchpractice.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;

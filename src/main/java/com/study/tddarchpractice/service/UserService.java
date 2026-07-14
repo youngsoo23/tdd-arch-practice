@@ -1,12 +1,12 @@
 package com.study.tddarchpractice.service;
 
-import com.example.demo.exception.CertificationCodeNotMatchedException;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.UserStatus;
-import com.example.demo.model.dto.UserCreateDto;
-import com.example.demo.model.dto.UserUpdateDto;
-import com.example.demo.repository.UserEntity;
-import com.example.demo.repository.UserRepository;
+import com.study.tddarchpractice.exception.CertificationCodeNotMatchedException;
+import com.study.tddarchpractice.exception.ResourceNotFoundException;
+import com.study.tddarchpractice.model.UserStatus;
+import com.study.tddarchpractice.model.dto.UserCreateDto;
+import com.study.tddarchpractice.model.dto.UserUpdateDto;
+import com.study.tddarchpractice.repository.UserEntity;
+import com.study.tddarchpractice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

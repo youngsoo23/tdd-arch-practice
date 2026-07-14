@@ -1,7 +1,7 @@
 package com.study.tddarchpractice.controller;
 
-import com.example.demo.exception.CertificationCodeNotMatchedException;
-import com.example.demo.exception.ResourceNotFoundException;
+import com.study.tddarchpractice.exception.CertificationCodeNotMatchedException;
+import com.study.tddarchpractice.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

@@ -1,9 +1,10 @@
 package com.study.tddarchpractice.controller;
 
-import com.example.demo.model.dto.PostResponse;
-import com.example.demo.model.dto.PostUpdateDto;
-import com.example.demo.repository.PostEntity;
-import com.example.demo.service.PostService;
+
+import com.study.tddarchpractice.model.dto.PostResponse;
+import com.study.tddarchpractice.model.dto.PostUpdateDto;
+import com.study.tddarchpractice.repository.PostEntity;
+import com.study.tddarchpractice.service.PostService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

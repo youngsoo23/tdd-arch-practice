@@ -1,6 +1,6 @@
 package com.study.tddarchpractice.model.dto;
 
-import com.example.demo.model.UserStatus;
+import com.study.tddarchpractice.model.UserStatus;
 import lombok.Getter;
 import lombok.Setter;
 

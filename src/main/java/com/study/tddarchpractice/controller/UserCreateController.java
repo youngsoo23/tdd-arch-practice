@@ -1,9 +1,10 @@
 package com.study.tddarchpractice.controller;
 
-import com.example.demo.model.dto.UserCreateDto;
-import com.example.demo.model.dto.UserResponse;
-import com.example.demo.repository.UserEntity;
-import com.example.demo.service.UserService;
+
+import com.study.tddarchpractice.model.dto.UserCreateDto;
+import com.study.tddarchpractice.model.dto.UserResponse;
+import com.study.tddarchpractice.repository.UserEntity;
+import com.study.tddarchpractice.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
