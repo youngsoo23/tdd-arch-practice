@@ -26,6 +26,6 @@ public class PostCreateController {
     public ResponseEntity<PostResponse> createPost(@RequestBody PostCreate postCreate) {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(postController.toResponse(postService.createPost(postCreate)));
+            .body(postController.toResponse(postService.create(postCreate)));
     }
 }

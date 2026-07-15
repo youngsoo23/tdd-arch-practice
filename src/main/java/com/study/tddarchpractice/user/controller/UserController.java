@@ -29,7 +29,7 @@ public class UserController {
     public ResponseEntity<UserResponse> getUserById(@PathVariable long id) {
         return ResponseEntity
             .ok()
-            .body(toResponse(userService.getByIdOrElseThrow(id)));
+            .body(toResponse(userService.getById(id)));
     }
 
     @GetMapping("/{id}/verify")
@@ -62,7 +62,7 @@ public class UserController {
         @RequestBody UserUpdate userUpdate
     ) {
         UserEntity userEntity = userService.getByEmail(email);
-        userEntity = userService.updateUser(userEntity.getId(), userUpdate);
+        userEntity = userService.update(userEntity.getId(), userUpdate);
         return ResponseEntity
             .ok()
             .body(toMyProfileResponse(userEntity));

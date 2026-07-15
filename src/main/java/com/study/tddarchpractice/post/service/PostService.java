@@ -19,12 +19,12 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserService userService;
 
-    public PostEntity getPostById(long id) {
+    public PostEntity getById(long id) {
         return postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Posts", id));
     }
 
-    public PostEntity createPost(PostCreate postCreate) {
-        UserEntity userEntity = userService.getByIdOrElseThrow(postCreate.getWriterId());
+    public PostEntity create(PostCreate postCreate) {
+        UserEntity userEntity = userService.getById(postCreate.getWriterId());
         PostEntity postEntity = new PostEntity();
         postEntity.setWriter(userEntity);
         postEntity.setContent(postCreate.getContent());
@@ -32,8 +32,8 @@ public class PostService {
         return postRepository.save(postEntity);
     }
 
-    public PostEntity updatePost(long id, PostUpdate postUpdate) {
-        PostEntity postEntity = getPostById(id);
+    public PostEntity update(long id, PostUpdate postUpdate) {
+        PostEntity postEntity = getById(id);
         postEntity.setContent(postUpdate.getContent());
         postEntity.setModifiedAt(Clock.systemUTC().millis());
         return postRepository.save(postEntity);
