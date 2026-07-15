@@ -30,22 +30,24 @@ public class UserService {
 
     public UserEntity getByEmail(String email) {
         return userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
-            .orElseThrow(() -> new ResourceNotFoundException("Users", email));
+                .orElseThrow(() -> new ResourceNotFoundException("Users", email));
     }
 
     public UserEntity getByIdOrElseThrow(long id) {
         return userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
-            .orElseThrow(() -> new ResourceNotFoundException("Users", id));
+                .orElseThrow(() -> new ResourceNotFoundException("Users", id));
     }
 
     @Transactional
     public UserEntity createUser(UserCreate userCreate) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setEmail(userCreate.getEmail());
-        userEntity.setNickname(userCreate.getNickname());
-        userEntity.setAddress(userCreate.getAddress());
-        userEntity.setStatus(UserStatus.PENDING);
-        userEntity.setCertificationCode(UUID.randomUUID().toString());
+        UserEntity userEntity = UserEntity.builder()
+                .email(userCreate.getEmail())
+                .nickname(userCreate.getNickname())
+                .address(userCreate.getAddress())
+                .status(UserStatus.PENDING)
+                .certificationCode(UUID.randomUUID().toString())
+                .build();
+
         userEntity = userRepository.save(userEntity);
         String certificationUrl = generateCertificationUrl(userEntity);
         sendCertificationEmail(userCreate.getEmail(), certificationUrl);

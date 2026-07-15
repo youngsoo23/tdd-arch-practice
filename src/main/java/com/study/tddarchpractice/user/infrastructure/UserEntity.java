@@ -2,12 +2,15 @@ package com.study.tddarchpractice.user.infrastructure;
 
 import com.study.tddarchpractice.user.domain.UserStatus;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Table(name = "users")
 public class UserEntity {
 
@@ -33,4 +36,15 @@ public class UserEntity {
 
     @Column(name = "last_login_at")
     private Long lastLoginAt;
+
+    @Builder
+    public UserEntity(String email, String nickname, String address, String certificationCode, UserStatus status, Long lastLoginAt) {
+        this.email = email;
+        this.nickname = nickname;
+        this.address = address;
+        this.certificationCode = certificationCode;
+        this.status = status;
+        this.lastLoginAt = lastLoginAt;
+    }
+
 }
