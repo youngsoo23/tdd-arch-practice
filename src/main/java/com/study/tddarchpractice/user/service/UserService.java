@@ -22,7 +22,7 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final JavaMailSender mailSender;
+    private final CertificationService certificationService;
 
 
     public UserEntity getByEmail(String email) {
@@ -46,8 +46,8 @@ public class UserService {
                 .build();
 
         userEntity = userRepository.save(userEntity);
-        String certificationUrl = generateCertificationUrl(userEntity);
-        sendCertificationEmail(userCreate.getEmail(), certificationUrl);
+        String certificationUrl = certificationService.generateCertificationUrl(userEntity.getId(), userEntity.getCertificationCode());
+        certificationService.sendCertificationEmail(userCreate.getEmail(), userEntity.getId(), certificationUrl);
         return userEntity;
     }
 
@@ -75,15 +75,5 @@ public class UserService {
         userEntity.setStatus(UserStatus.ACTIVE);
     }
 
-    private void sendCertificationEmail(String email, String certificationUrl) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Please certify your email address");
-        message.setText("Please click the following link to certify your email address: " + certificationUrl);
-        mailSender.send(message);
-    }
 
-    private String generateCertificationUrl(UserEntity userEntity) {
-        return "http://localhost:8080/api/users/" + userEntity.getId() + "/verify?certificationCode=" + userEntity.getCertificationCode();
-    }
 }
