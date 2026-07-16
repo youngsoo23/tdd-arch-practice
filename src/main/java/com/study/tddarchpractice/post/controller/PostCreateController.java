@@ -1,6 +1,7 @@
 package com.study.tddarchpractice.post.controller;
 
 
+import com.study.tddarchpractice.post.domain.Post;
 import com.study.tddarchpractice.post.domain.PostCreate;
 import com.study.tddarchpractice.post.controller.response.PostResponse;
 import com.study.tddarchpractice.post.service.PostService;
@@ -26,6 +27,6 @@ public class PostCreateController {
     public ResponseEntity<PostResponse> createPost(@RequestBody PostCreate postCreate) {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(postController.toResponse(postService.create(postCreate)));
+            .body(PostResponse.from(postService.create(postCreate)));
     }
 }
