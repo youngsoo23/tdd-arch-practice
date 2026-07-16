@@ -27,3 +27,5 @@ VALUES (2,
         'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
         'PENDING',
         0);
+
+ALTER TABLE users ALTER COLUMN id RESTART WITH 3;

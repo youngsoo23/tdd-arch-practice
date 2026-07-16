@@ -1,8 +1,10 @@
 package com.study.tddarchpractice.user.service;
 
+import com.study.tddarchpractice.common.domain.exception.CertificationCodeNotMatchedException;
 import com.study.tddarchpractice.common.domain.exception.ResourceNotFoundException;
 import com.study.tddarchpractice.user.domain.UserCreate;
 import com.study.tddarchpractice.user.domain.UserStatus;
+import com.study.tddarchpractice.user.domain.UserUpdate;
 import com.study.tddarchpractice.user.infrastructure.UserEntity;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -32,10 +34,6 @@ public class UserServiceTest {
 
     @MockitoBean
     private JavaMailSender mailSender;
-
-    public UserServiceTest(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
 
     @Test
     void getByEmail은_ACTIVE_상태의_유저를_조회할수있다() {
@@ -91,5 +89,52 @@ public class UserServiceTest {
         // then
         assertThat((userEntity.getId())).isNotNull();
         assertThat(userEntity.getStatus()).isEqualTo(UserStatus.PENDING);
+    }
+
+    @Test
+    void userUpdate_를_이용한_유저_수정할수있다() {
+        // given
+        UserUpdate userUpdate = UserUpdate.builder()
+                .nickname("ohyoungsoo12")
+                .address("Seoul Nowon")
+                .build();
+        // when
+        userService.update(1, userUpdate);
+        // then
+        UserEntity userEntity = userService.getById(1);
+        assertThat((userEntity.getId())).isNotNull();
+        assertThat(userEntity.getNickname()).isEqualTo("ohyoungsoo12");
+        assertThat(userEntity.getAddress()).isEqualTo("Seoul Nowon");
+    }
+
+    // 로그인 시간 비교가 어려움
+    @Test
+    void login_테스트_마지막_로그인시간_저장() {
+        // given
+        // when
+        userService.login(1);
+        // then
+        UserEntity userEntity = userService.getById(1);
+        assertThat((userEntity.getLastLoginAt())).isGreaterThan(0L);
+//        assertThat(userEntity.getLastLoginAt()).isEqualTo("...."); //fixme: 로그인 시간 비교가 어려움
+    }
+
+    @Test
+    void PENDING_상태의_유저는_이메일_인증을_통해_ACTIVE_상태로_변경할수있다() {
+        // given
+        // when
+        userService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        // then
+        UserEntity userEntity = userService.getById(2);
+        assertThat(userEntity.getStatus()).isEqualTo(UserStatus.ACTIVE);
+    }
+
+    @Test
+    void PENDING_상태의_유저는_잘못된_인증코드로_인증을_시도하면_CertificationCodeNotMatchedException_발생() {
+        // given
+        // when
+        // then
+        assertThatThrownBy(() -> userService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab"))
+                .isInstanceOf(CertificationCodeNotMatchedException.class);
     }
 }
