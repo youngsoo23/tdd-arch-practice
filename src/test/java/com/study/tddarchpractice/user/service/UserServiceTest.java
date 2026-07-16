@@ -1,16 +1,23 @@
 package com.study.tddarchpractice.user.service;
 
 import com.study.tddarchpractice.common.domain.exception.ResourceNotFoundException;
+import com.study.tddarchpractice.user.domain.UserCreate;
+import com.study.tddarchpractice.user.domain.UserStatus;
 import com.study.tddarchpractice.user.infrastructure.UserEntity;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @TestPropertySource("classpath:test-application.yml")
@@ -22,6 +29,13 @@ public class UserServiceTest {
 
     @Autowired
     private UserService userService;
+
+    @MockitoBean
+    private JavaMailSender mailSender;
+
+    public UserServiceTest(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
     @Test
     void getByEmail은_ACTIVE_상태의_유저를_조회할수있다() {
@@ -60,5 +74,22 @@ public class UserServiceTest {
         // then
         assertThatThrownBy(() -> userService.getById(2))
                 .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @Test
+    void userCreateDto_를_이용한_유저_생성할수있다() {
+        // given
+        UserCreate userCreate = UserCreate.builder()
+                .email("oh.youngsoo234@gmail.com")
+                .nickname("ohyoungsoo1")
+                .address("Seoul")
+                .build();
+
+        BDDMockito.doNothing().when(mailSender).send(any(SimpleMailMessage.class));
+        // when
+        UserEntity userEntity = userService.create(userCreate);
+        // then
+        assertThat((userEntity.getId())).isNotNull();
+        assertThat(userEntity.getStatus()).isEqualTo(UserStatus.PENDING);
     }
 }
