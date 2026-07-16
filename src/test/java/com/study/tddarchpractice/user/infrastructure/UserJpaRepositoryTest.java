@@ -16,10 +16,10 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 // 테스트 메소드가 병렬로 처리되는데 동시성 제어가 안되는거 같아서.
 @DataJpaTest
 @Sql(scripts = "/sql/user-repository-test-data.sql")
-public class UserRepositoryTest {
+public class UserJpaRepositoryTest {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserJpaRepository userJPARepository;
 
     @Test
     void findByIdAndStatus_유저_데이터를_찾아올수있다() {
@@ -34,7 +34,7 @@ public class UserRepositoryTest {
 //                .build();
 //        userRepository.save(userEntity);
         // when
-        Optional<UserEntity> result = userRepository.findByIdAndStatus(1, UserStatus.ACTIVE);
+        Optional<UserEntity> result = userJPARepository.findByIdAndStatus(1, UserStatus.ACTIVE);
         // then
         assertThat(result.isPresent()).isTrue();
     }
@@ -51,7 +51,7 @@ public class UserRepositoryTest {
 //                .build();
 //        userRepository.save(userEntity);
         // when
-        Optional<UserEntity> result = userRepository.findByIdAndStatus(1, UserStatus.PENDING);
+        Optional<UserEntity> result = userJPARepository.findByIdAndStatus(1, UserStatus.PENDING);
         // then
         assertThat(result.isEmpty()).isTrue();
 
@@ -69,7 +69,7 @@ public class UserRepositoryTest {
 //                .build();
 //        userRepository.save(userEntity);
         // when
-        Optional<UserEntity> result = userRepository.findByEmailAndStatus("oh.youngsoo23@gmail.com", UserStatus.ACTIVE);
+        Optional<UserEntity> result = userJPARepository.findByEmailAndStatus("oh.youngsoo23@gmail.com", UserStatus.ACTIVE);
         // then
         assertThat(result.isPresent()).isTrue();
     }
@@ -86,7 +86,7 @@ public class UserRepositoryTest {
 //                .build();
 //        userRepository.save(userEntity);
         // when
-        Optional<UserEntity> result = userRepository.findByEmailAndStatus("oh.youngsoo@gmail.com", UserStatus.PENDING);
+        Optional<UserEntity> result = userJPARepository.findByEmailAndStatus("oh.youngsoo@gmail.com", UserStatus.PENDING);
         // then
         assertThat(result.isEmpty()).isTrue();
     }

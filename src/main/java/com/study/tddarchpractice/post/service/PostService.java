@@ -4,7 +4,8 @@ import com.study.tddarchpractice.common.domain.exception.ResourceNotFoundExcepti
 import com.study.tddarchpractice.post.domain.PostCreate;
 import com.study.tddarchpractice.post.domain.PostUpdate;
 import com.study.tddarchpractice.post.infrastructure.PostEntity;
-import com.study.tddarchpractice.post.infrastructure.PostRepository;
+import com.study.tddarchpractice.post.infrastructure.PostJpaRepository;
+import com.study.tddarchpractice.post.service.port.PostRepository;
 import com.study.tddarchpractice.user.infrastructure.UserEntity;
 import com.study.tddarchpractice.user.service.UserService;
 import lombok.RequiredArgsConstructor;

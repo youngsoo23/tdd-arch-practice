@@ -6,7 +6,8 @@ import com.study.tddarchpractice.user.domain.UserStatus;
 import com.study.tddarchpractice.user.domain.UserCreate;
 import com.study.tddarchpractice.user.domain.UserUpdate;
 import com.study.tddarchpractice.user.infrastructure.UserEntity;
-import com.study.tddarchpractice.user.infrastructure.UserRepository;
+import com.study.tddarchpractice.user.infrastructure.UserJpaRepository;
+import com.study.tddarchpractice.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
