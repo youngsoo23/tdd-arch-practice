@@ -6,11 +6,8 @@ import com.study.tddarchpractice.user.domain.UserStatus;
 import com.study.tddarchpractice.user.domain.UserCreate;
 import com.study.tddarchpractice.user.domain.UserUpdate;
 import com.study.tddarchpractice.user.infrastructure.UserEntity;
-import com.study.tddarchpractice.user.infrastructure.UserJpaRepository;
 import com.study.tddarchpractice.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,8 +43,7 @@ public class UserService {
                 .build();
 
         userEntity = userRepository.save(userEntity);
-        String certificationUrl = certificationService.generateCertificationUrl(userEntity.getId(), userEntity.getCertificationCode());
-        certificationService.sendCertificationEmail(userCreate.getEmail(), userEntity.getId(), certificationUrl);
+        certificationService.send(userCreate.getEmail(), userEntity.getId(), userEntity.getCertificationCode());
         return userEntity;
     }
 
