@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 @TestPropertySource("classpath:test-application.yml")
 @SqlGroup({
         @Sql(scripts = "/sql/user-repository-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
-        @Sql(scripts = "/sql/clear-user-repository-test-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+        @Sql(scripts = "/sql/clear-repository-test-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 })//SqlGroup을 사용하면 여러개의 sql을 실행할수있다. 테스트메소드가 실행되기전에 데이터를 넣는 코드와 테스트메소드가 실행된후 데이터를 지우는 코드를 작성할수있다.
 public class UserServiceTest {
 
