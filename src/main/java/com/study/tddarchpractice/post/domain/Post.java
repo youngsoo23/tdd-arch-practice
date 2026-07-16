@@ -25,6 +25,15 @@ public class Post {
         this.writer = writer;
     }
 
+    public static Post from(PostCreate postCreate, User writer) {
+        return Post.builder()
+                .content(postCreate.getContent())
+                .createdAt(System.currentTimeMillis())
+                .modifiedAt(System.currentTimeMillis())
+                .writer(writer)
+                .build();
+    }
+
     public Post update(PostUpdate postUpdate) {
         return Post.builder()
                 .id(this.id)
