@@ -1,10 +1,9 @@
 package com.study.tddarchpractice.post.service;
 
-import com.study.tddarchpractice.common.domain.exception.ResourceNotFoundException;
+import com.study.tddarchpractice.post.domain.Post;
 import com.study.tddarchpractice.post.domain.PostCreate;
 import com.study.tddarchpractice.post.domain.PostUpdate;
 import com.study.tddarchpractice.post.infrastructure.PostEntity;
-import com.study.tddarchpractice.user.infrastructure.UserEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,9 +28,9 @@ public class PostServiceTest {
     void getById는_존재는_게시물을_내려준다() {
         // given
         // when
-        PostEntity postEntity = postService.getById(1);
+        Post post = postService.getById(1);
         // then
-        assertThat(postEntity.getContent())
+        assertThat(post.getContent())
                 .isEqualTo("This is the content of the first post.");
     }
 
@@ -43,19 +42,19 @@ public class PostServiceTest {
                 .content("This is a new post.")
                 .build();
         // when
-        PostEntity postEntity = postService.create(postCreate);
+        Post post = postService.create(postCreate);
         // then
-        assertThat(postEntity.getId()).isNotNull();
-        assertThat(postEntity.getContent()).isEqualTo("This is a new post.");
+        assertThat(post.getId()).isNotNull();
+        assertThat(post.getContent()).isEqualTo("This is a new post.");
     }
 
     @Test
     void update는_게시물을_수정한다() {
         // given
         // when
-        PostEntity postEntity = postService.update(1, new PostUpdate( "This is an updated post."));
+        Post post = postService.update(1, new PostUpdate( "This is an updated post."));
         // then
-        assertThat(postEntity.getContent())
+        assertThat(post.getContent())
                 .isEqualTo("This is an updated post.");
     }
 }

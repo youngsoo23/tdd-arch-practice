@@ -1,5 +1,6 @@
 package com.study.tddarchpractice.user.infrastructure;
 
+import com.study.tddarchpractice.user.domain.User;
 import com.study.tddarchpractice.user.domain.UserStatus;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -47,4 +48,26 @@ public class UserEntity {
         this.lastLoginAt = lastLoginAt;
     }
 
+    public static UserEntity fromModel(User user) {
+        return UserEntity.builder()
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .address(user.getAddress())
+                .certificationCode(user.getCertificationCode())
+                .status(user.getStatus())
+                .lastLoginAt(user.getLastLoginAt())
+                .build();
+    }
+
+    public User toModel() {
+        return User.builder()
+                .id(this.id)
+                .email(this.email)
+                .nickname(this.nickname)
+                .address(this.address)
+                .certificationCode(this.certificationCode)
+                .status(this.status)
+                .lastLoginAt(this.lastLoginAt)
+                .build();
+    }
 }

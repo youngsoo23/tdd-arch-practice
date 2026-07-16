@@ -2,6 +2,7 @@ package com.study.tddarchpractice.user.service;
 
 import com.study.tddarchpractice.common.domain.exception.CertificationCodeNotMatchedException;
 import com.study.tddarchpractice.common.domain.exception.ResourceNotFoundException;
+import com.study.tddarchpractice.user.domain.User;
 import com.study.tddarchpractice.user.domain.UserStatus;
 import com.study.tddarchpractice.user.domain.UserCreate;
 import com.study.tddarchpractice.user.domain.UserUpdate;
@@ -22,53 +23,46 @@ public class UserService {
     private final CertificationService certificationService;
 
 
-    public UserEntity getByEmail(String email) {
+    public User getByEmail(String email) {
         return userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
                 .orElseThrow(() -> new ResourceNotFoundException("Users", email));
     }
 
-    public UserEntity getById(long id) {
+    public User getById(long id) {
         return userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
                 .orElseThrow(() -> new ResourceNotFoundException("Users", id));
     }
 
     @Transactional
-    public UserEntity create(UserCreate userCreate) {
-        UserEntity userEntity = UserEntity.builder()
-                .email(userCreate.getEmail())
-                .nickname(userCreate.getNickname())
-                .address(userCreate.getAddress())
-                .status(UserStatus.PENDING)
-                .certificationCode(UUID.randomUUID().toString())
-                .build();
-
-        userEntity = userRepository.save(userEntity);
-        certificationService.send(userCreate.getEmail(), userEntity.getId(), userEntity.getCertificationCode());
-        return userEntity;
+    public User create(UserCreate userCreate) {
+        User user = userRepository.save(User.from(userCreate));
+        certificationService.send(userCreate.getEmail(), user.getId(), user.getCertificationCode());
+        return user;
     }
 
     @Transactional
-    public UserEntity update(long id, UserUpdate userUpdate) {
-        UserEntity userEntity = getById(id);
-        userEntity.setNickname(userUpdate.getNickname());
-        userEntity.setAddress(userUpdate.getAddress());
-        userEntity = userRepository.save(userEntity);
-        return userEntity;
+    public User update(long id, UserUpdate userUpdate) {
+        User user = getById(id);
+        user = user.update(userUpdate);
+        user = userRepository.save(user);
+        return user;
     }
 
     @Transactional
     public void login(long id) {
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
-        userEntity.setLastLoginAt(Clock.systemUTC().millis());
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
+        user.login();
+        userRepository.save(user); //jpa 의존성이 사라져서 저장해줘야한다.
     }
 
     @Transactional
     public void verifyEmail(long id, String certificationCode) {
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
-        if (!certificationCode.equals(userEntity.getCertificationCode())) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
+        if (!certificationCode.equals(user.getCertificationCode())) {
             throw new CertificationCodeNotMatchedException();
         }
-        userEntity.setStatus(UserStatus.ACTIVE);
+      user = user.certificate(certificationCode);
+      userRepository.save(user);
     }
 
 

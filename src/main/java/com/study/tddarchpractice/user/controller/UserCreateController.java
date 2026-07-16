@@ -1,6 +1,7 @@
 package com.study.tddarchpractice.user.controller;
 
 
+import com.study.tddarchpractice.user.domain.User;
 import com.study.tddarchpractice.user.domain.UserCreate;
 import com.study.tddarchpractice.user.controller.response.UserResponse;
 import com.study.tddarchpractice.user.infrastructure.UserEntity;
@@ -25,10 +26,10 @@ public class UserCreateController {
 
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody UserCreate userCreate) {
-        UserEntity userEntity = userService.create(userCreate);
+        User user = userService.create(userCreate);
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(userController.toResponse(userEntity));
+            .body(UserResponse.from(user));
     }
 
 }

@@ -3,6 +3,7 @@ package com.study.tddarchpractice.user.controller;
 
 import com.study.tddarchpractice.user.controller.response.MyProfileResponse;
 import com.study.tddarchpractice.user.controller.response.UserResponse;
+import com.study.tddarchpractice.user.domain.User;
 import com.study.tddarchpractice.user.domain.UserUpdate;
 import com.study.tddarchpractice.user.infrastructure.UserEntity;
 import com.study.tddarchpractice.user.service.UserService;
@@ -29,7 +30,7 @@ public class UserController {
     public ResponseEntity<UserResponse> getUserById(@PathVariable long id) {
         return ResponseEntity
             .ok()
-            .body(toResponse(userService.getById(id)));
+            .body(UserResponse.from(userService.getById(id)));
     }
 
     @GetMapping("/{id}/verify")
@@ -47,11 +48,11 @@ public class UserController {
         @Parameter(name = "EMAIL", in = ParameterIn.HEADER)
         @RequestHeader("EMAIL") String email // 일반적으로 스프링 시큐리티를 사용한다면 UserPrincipal 에서 가져옵니다.
     ) {
-        UserEntity userEntity = userService.getByEmail(email);
-        userService.login(userEntity.getId());
+        User user = userService.getByEmail(email);
+        userService.login(user.getId());
         return ResponseEntity
             .ok()
-            .body(toMyProfileResponse(userEntity));
+            .body(MyProfileResponse.from(user));
     }
 
     @PutMapping("/me")
@@ -61,31 +62,12 @@ public class UserController {
         @RequestHeader("EMAIL") String email, // 일반적으로 스프링 시큐리티를 사용한다면 UserPrincipal 에서 가져옵니다.
         @RequestBody UserUpdate userUpdate
     ) {
-        UserEntity userEntity = userService.getByEmail(email);
-        userEntity = userService.update(userEntity.getId(), userUpdate);
+        User user = userService.getByEmail(email);
+        user = userService.update(user.getId(), userUpdate);
         return ResponseEntity
             .ok()
-            .body(toMyProfileResponse(userEntity));
+            .body(MyProfileResponse.from(user));
     }
 
-    public UserResponse toResponse(UserEntity userEntity) {
-        UserResponse userResponse = new UserResponse();
-        userResponse.setId(userEntity.getId());
-        userResponse.setEmail(userEntity.getEmail());
-        userResponse.setNickname(userEntity.getNickname());
-        userResponse.setStatus(userEntity.getStatus());
-        userResponse.setLastLoginAt(userEntity.getLastLoginAt());
-        return userResponse;
-    }
 
-    public MyProfileResponse toMyProfileResponse(UserEntity userEntity) {
-        MyProfileResponse myProfileResponse = new MyProfileResponse();
-        myProfileResponse.setId(userEntity.getId());
-        myProfileResponse.setEmail(userEntity.getEmail());
-        myProfileResponse.setNickname(userEntity.getNickname());
-        myProfileResponse.setStatus(userEntity.getStatus());
-        myProfileResponse.setAddress(userEntity.getAddress());
-        myProfileResponse.setLastLoginAt(userEntity.getLastLoginAt());
-        return myProfileResponse;
-    }
 }

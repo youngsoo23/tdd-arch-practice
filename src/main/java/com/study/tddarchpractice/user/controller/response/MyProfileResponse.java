@@ -1,5 +1,6 @@
 package com.study.tddarchpractice.user.controller.response;
 
+import com.study.tddarchpractice.user.domain.User;
 import com.study.tddarchpractice.user.domain.UserStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,4 +15,15 @@ public class MyProfileResponse {
     private String address;
     private UserStatus status;
     private Long lastLoginAt;
+
+    public static MyProfileResponse from(User user) {
+        MyProfileResponse response = new MyProfileResponse();
+        response.setId(user.getId());
+        response.setEmail(user.getEmail());
+        response.setNickname(user.getNickname());
+        response.setAddress(user.getAddress());
+        response.setStatus(user.getStatus());
+        response.setLastLoginAt(user.getLastLoginAt());
+        return response;
+    }
 }

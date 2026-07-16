@@ -1,16 +1,16 @@
 package com.study.tddarchpractice.user.service.port;
 
+import com.study.tddarchpractice.user.domain.User;
 import com.study.tddarchpractice.user.domain.UserStatus;
-import com.study.tddarchpractice.user.infrastructure.UserEntity;
 
 import java.util.Optional;
 
 public interface UserRepository {
-    Optional<UserEntity> findByIdAndStatus(long id, UserStatus userStatus);
+    Optional<User> findByIdAndStatus(long id, UserStatus userStatus);
 
-    Optional<UserEntity> findByEmailAndStatus(String email, UserStatus userStatus);
+    Optional<User> findByEmailAndStatus(String email, UserStatus userStatus);
 
-    UserEntity save(UserEntity userEntity);
+    User save(User user);
 
-    Optional<UserEntity> findById(long id);
+    Optional<User> findById(long id);
 }

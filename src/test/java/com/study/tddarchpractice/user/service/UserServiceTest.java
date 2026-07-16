@@ -2,6 +2,7 @@ package com.study.tddarchpractice.user.service;
 
 import com.study.tddarchpractice.common.domain.exception.CertificationCodeNotMatchedException;
 import com.study.tddarchpractice.common.domain.exception.ResourceNotFoundException;
+import com.study.tddarchpractice.user.domain.User;
 import com.study.tddarchpractice.user.domain.UserCreate;
 import com.study.tddarchpractice.user.domain.UserStatus;
 import com.study.tddarchpractice.user.domain.UserUpdate;
@@ -40,9 +41,9 @@ public class UserServiceTest {
         // given
         String email = "oh.youngsoo23@gmail.com";
         // when
-        UserEntity userEntity = userService.getByEmail(email);
+        User user = userService.getByEmail(email);
         // then
-        assertThat(userEntity.getNickname()).isEqualTo("ohyoungsoo");
+        assertThat(user.getNickname()).isEqualTo("ohyoungsoo");
     }
 
     @Test
@@ -60,9 +61,9 @@ public class UserServiceTest {
     void getById는_ACTIVE_상태의_유저를_조회할수있다() {
         // given
         // when
-        UserEntity userEntity = userService.getById(1);
+        User user = userService.getById(1);
         // then
-        assertThat(userEntity.getNickname()).isEqualTo("ohyoungsoo");
+        assertThat(user.getNickname()).isEqualTo("ohyoungsoo");
     }
 
     @Test
@@ -85,10 +86,10 @@ public class UserServiceTest {
 
         BDDMockito.doNothing().when(mailSender).send(any(SimpleMailMessage.class));
         // when
-        UserEntity userEntity = userService.create(userCreate);
+        User user = userService.create(userCreate);
         // then
-        assertThat((userEntity.getId())).isNotNull();
-        assertThat(userEntity.getStatus()).isEqualTo(UserStatus.PENDING);
+        assertThat((user.getId())).isNotNull();
+        assertThat(user.getStatus()).isEqualTo(UserStatus.PENDING);
     }
 
     @Test
@@ -101,10 +102,10 @@ public class UserServiceTest {
         // when
         userService.update(1, userUpdate);
         // then
-        UserEntity userEntity = userService.getById(1);
-        assertThat((userEntity.getId())).isNotNull();
-        assertThat(userEntity.getNickname()).isEqualTo("ohyoungsoo12");
-        assertThat(userEntity.getAddress()).isEqualTo("Seoul Nowon");
+        User user = userService.getById(1);
+        assertThat((user.getId())).isNotNull();
+        assertThat(user.getNickname()).isEqualTo("ohyoungsoo12");
+        assertThat(user.getAddress()).isEqualTo("Seoul Nowon");
     }
 
     // 로그인 시간 비교가 어려움
@@ -114,8 +115,8 @@ public class UserServiceTest {
         // when
         userService.login(1);
         // then
-        UserEntity userEntity = userService.getById(1);
-        assertThat((userEntity.getLastLoginAt())).isGreaterThan(0L);
+        User user = userService.getById(1);
+        assertThat((user.getLastLoginAt())).isGreaterThan(0L);
 //        assertThat(userEntity.getLastLoginAt()).isEqualTo("...."); //fixme: 로그인 시간 비교가 어려움
     }
 
@@ -125,8 +126,8 @@ public class UserServiceTest {
         // when
         userService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
         // then
-        UserEntity userEntity = userService.getById(2);
-        assertThat(userEntity.getStatus()).isEqualTo(UserStatus.ACTIVE);
+        User user = userService.getById(2);
+        assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
     }
 
     @Test
