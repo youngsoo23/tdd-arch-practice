@@ -1,4 +1,4 @@
-package com.study.tddarchpractice.user.service;
+package com.study.tddarchpractice.medium;
 
 import com.study.tddarchpractice.common.domain.exception.CertificationCodeNotMatchedException;
 import com.study.tddarchpractice.common.domain.exception.ResourceNotFoundException;
@@ -6,7 +6,7 @@ import com.study.tddarchpractice.user.domain.User;
 import com.study.tddarchpractice.user.domain.UserCreate;
 import com.study.tddarchpractice.user.domain.UserStatus;
 import com.study.tddarchpractice.user.domain.UserUpdate;
-import com.study.tddarchpractice.user.infrastructure.UserEntity;
+import com.study.tddarchpractice.user.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;

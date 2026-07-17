@@ -1,4 +1,4 @@
-package com.study.tddarchpractice.common.controller;
+package com.study.tddarchpractice.medium;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

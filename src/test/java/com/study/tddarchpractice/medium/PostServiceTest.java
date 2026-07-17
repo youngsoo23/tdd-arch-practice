@@ -1,9 +1,9 @@
-package com.study.tddarchpractice.post.service;
+package com.study.tddarchpractice.medium;
 
 import com.study.tddarchpractice.post.domain.Post;
 import com.study.tddarchpractice.post.domain.PostCreate;
 import com.study.tddarchpractice.post.domain.PostUpdate;
-import com.study.tddarchpractice.post.infrastructure.PostEntity;
+import com.study.tddarchpractice.post.service.PostService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

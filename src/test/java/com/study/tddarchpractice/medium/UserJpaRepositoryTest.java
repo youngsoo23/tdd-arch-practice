@@ -1,7 +1,9 @@
-package com.study.tddarchpractice.user.infrastructure;
+package com.study.tddarchpractice.medium;
 
 
 import com.study.tddarchpractice.user.domain.UserStatus;
+import com.study.tddarchpractice.user.infrastructure.UserEntity;
+import com.study.tddarchpractice.user.infrastructure.UserJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;

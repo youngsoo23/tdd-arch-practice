@@ -1,4 +1,4 @@
-package com.study.tddarchpractice.user.controller;
+package com.study.tddarchpractice.medium;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
