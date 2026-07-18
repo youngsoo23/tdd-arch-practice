@@ -18,7 +18,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class UserServiceTest {
 
-    private UserService userService;
+    private UserServiceImpl userService;
     private FakeUserRepository fakeUserRepository;
     private FakeMailSenderTest fakeMailSenderTest;
 
@@ -27,7 +27,7 @@ class UserServiceTest {
         fakeUserRepository = new FakeUserRepository();
         fakeMailSenderTest = new FakeMailSenderTest();
         CertificationService certificationService = new CertificationService(fakeMailSenderTest);
-        userService = new UserService(
+        userService = new UserServiceImpl(
                 fakeUserRepository,
                 certificationService,
                 new TestClockHolder(1678530673958L),

@@ -4,6 +4,7 @@ import com.study.tddarchpractice.common.domain.exception.CertificationCodeNotMat
 import com.study.tddarchpractice.common.domain.exception.ResourceNotFoundException;
 import com.study.tddarchpractice.common.service.port.ClockHolder;
 import com.study.tddarchpractice.common.service.port.UuidHolder;
+import com.study.tddarchpractice.user.controller.port.UserService;
 import com.study.tddarchpractice.user.domain.User;
 import com.study.tddarchpractice.user.domain.UserCreate;
 import com.study.tddarchpractice.user.domain.UserStatus;
@@ -15,23 +16,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final CertificationService certificationService;
     private final ClockHolder clockHolder;
     private final UuidHolder uuidHolder;
 
+    @Override
     public User getByEmail(String email) {
         return userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
                 .orElseThrow(() -> new ResourceNotFoundException("Users", email));
     }
 
+    @Override
     public User getById(long id) {
         return userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
                 .orElseThrow(() -> new ResourceNotFoundException("Users", id));
     }
 
+    @Override
     @Transactional
     public User create(UserCreate userCreate) {
         User user = userRepository.save(User.from(userCreate, uuidHolder));
@@ -39,6 +43,7 @@ public class UserService {
         return user;
     }
 
+    @Override
     @Transactional
     public User update(long id, UserUpdate userUpdate) {
         User user = getById(id);
@@ -47,6 +52,7 @@ public class UserService {
         return user;
     }
 
+    @Override
     @Transactional
     public void login(long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
@@ -54,6 +60,7 @@ public class UserService {
         userRepository.save(user); //jpa 의존성이 사라져서 저장해줘야한다.
     }
 
+    @Override
     @Transactional
     public void verifyEmail(long id, String certificationCode) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));

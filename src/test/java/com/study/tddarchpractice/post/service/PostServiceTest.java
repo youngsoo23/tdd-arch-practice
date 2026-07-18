@@ -12,7 +12,7 @@ import com.study.tddarchpractice.post.domain.PostUpdate;
 import com.study.tddarchpractice.user.domain.User;
 import com.study.tddarchpractice.user.domain.UserStatus;
 import com.study.tddarchpractice.user.service.CertificationService;
-import com.study.tddarchpractice.user.service.UserService;
+import com.study.tddarchpractice.user.service.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +21,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class PostServiceTest {
 
-    private PostService postService;
+    private PostServiceImpl postService;
     private FakePostRepository fakePostRepository;
     private FakeUserRepository fakeUserRepository;
 
@@ -30,13 +30,13 @@ class PostServiceTest {
         fakePostRepository = new FakePostRepository();
         fakeUserRepository = new FakeUserRepository();
         CertificationService certificationService = new CertificationService(new FakeMailSenderTest());
-        UserService userService = new UserService(
+        UserServiceImpl userService = new UserServiceImpl(
                 fakeUserRepository,
                 certificationService,
                 new TestClockHolder(1678530673958L),
                 new TestUuidHolder("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
         );
-        postService = PostService.builder()
+        postService = PostServiceImpl.builder()
                 .postRepository(fakePostRepository)
                 .userRepository(fakeUserRepository)
                 .build();

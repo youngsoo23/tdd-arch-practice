@@ -1,10 +1,10 @@
 package com.study.tddarchpractice.post.controller;
 
 
+import com.study.tddarchpractice.post.controller.port.PostService;
 import com.study.tddarchpractice.post.domain.Post;
 import com.study.tddarchpractice.post.domain.PostCreate;
 import com.study.tddarchpractice.post.controller.response.PostResponse;
-import com.study.tddarchpractice.post.service.PostService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
