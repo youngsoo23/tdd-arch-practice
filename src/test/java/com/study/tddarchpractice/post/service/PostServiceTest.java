@@ -36,8 +36,10 @@ class PostServiceTest {
                 new TestClockHolder(1678530673958L),
                 new TestUuidHolder("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
         );
-        postService = new PostService(fakePostRepository, userService);
-
+        postService = PostService.builder()
+                .postRepository(fakePostRepository)
+                .userRepository(fakeUserRepository)
+                .build();
         fakeUserRepository.save(User.builder()
                 .id(1L)
                 .email("oh.youngsoo23@gmail.com")

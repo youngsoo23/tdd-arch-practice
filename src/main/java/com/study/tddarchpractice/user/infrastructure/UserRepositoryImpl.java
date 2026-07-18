@@ -1,5 +1,6 @@
 package com.study.tddarchpractice.user.infrastructure;
 
+import com.study.tddarchpractice.common.domain.exception.ResourceNotFoundException;
 import com.study.tddarchpractice.user.domain.User;
 import com.study.tddarchpractice.user.domain.UserStatus;
 import com.study.tddarchpractice.user.service.port.UserRepository;
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
- public class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryImpl implements UserRepository {
     private final UserJpaRepository userJpaRepository;
 
     @Override
@@ -32,4 +33,12 @@ import java.util.Optional;
     public Optional<User> findById(long id) {
         return userJpaRepository.findById(id).map(UserEntity::toModel);
     }
+
+    @Override
+    public User getById(long id) {
+        return userJpaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Users", id)).toModel();
+    }
+
+
 }
