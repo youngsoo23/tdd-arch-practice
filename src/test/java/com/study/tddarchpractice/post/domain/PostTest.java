@@ -36,4 +36,39 @@ public class PostTest {
         assertThat(post.getWriter().getStatus()).isEqualTo(ACTIVE);
     }
 
+    @Test
+    public void PostUpdate_로_게시물을_수정할수있다() {
+        // given
+        User writer = User.builder()
+                .id(1L)
+                .email("oh.youngsoo23@gmail.com")
+                .nickname("ohyoungsoo")
+                .address("Seoul")
+                .status(ACTIVE)
+                .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
+                .build();
+
+        Post post = Post.builder()
+                .id(1L)
+                .content("This is a test post.")
+                .createdAt(100L)
+                .modifiedAt(100L)
+                .writer(writer)
+                .build();
+
+        PostUpdate postUpdate = PostUpdate.builder()
+                .content("This is updated content.")
+                .build();
+
+        // when
+        Post updatedPost = post.update(postUpdate);
+
+        // then
+        assertThat(updatedPost.getId()).isEqualTo(1L);
+        assertThat(updatedPost.getContent()).isEqualTo("This is updated content.");
+        assertThat(updatedPost.getCreatedAt()).isEqualTo(100L);
+        assertThat(updatedPost.getModifiedAt()).isGreaterThanOrEqualTo(post.getCreatedAt());
+        assertThat(updatedPost.getWriter()).isEqualTo(writer);
+    }
+
 }
