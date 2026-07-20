@@ -44,7 +44,7 @@ class UserServiceTest {
         // given
         String email = "oh.youngsoo23@gmail.com";
         // when
-        User user = testContainer.userReadService.getByEmail(email);
+        User user = testContainer.userService.getByEmail(email);
         // then
         assertThat(user.getNickname()).isEqualTo("ohyoungsoo");
     }
@@ -55,7 +55,7 @@ class UserServiceTest {
         String email = "oh.youngsoo223@gmail.com";
         // when
         // then
-        assertThatThrownBy(() -> testContainer.userReadService.getByEmail(email))
+        assertThatThrownBy(() -> testContainer.userService.getByEmail(email))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -63,7 +63,7 @@ class UserServiceTest {
     void getById는_ACTIVE_상태의_유저를_조회할수있다() {
         // given
         // when
-        User user = testContainer.userReadService.getById(1);
+        User user = testContainer.userService.getById(1);
         // then
         assertThat(user.getNickname()).isEqualTo("ohyoungsoo");
     }
@@ -73,7 +73,7 @@ class UserServiceTest {
         // given
         // when
         // then
-        assertThatThrownBy(() -> testContainer.userReadService.getById(2))
+        assertThatThrownBy(() -> testContainer.userService.getById(2))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -86,7 +86,7 @@ class UserServiceTest {
                 .address("Seoul")
                 .build();
         // when
-        User user = testContainer.userCreateService.create(userCreate);
+        User user = testContainer.userService.create(userCreate);
         // then
         assertThat(user.getId()).isNotNull();
         assertThat(user.getStatus()).isEqualTo(UserStatus.PENDING);
@@ -103,9 +103,9 @@ class UserServiceTest {
                 .address("Seoul Nowon")
                 .build();
         // when
-        testContainer.userUpdateService.update(1, userUpdate);
+        testContainer.userService.update(1, userUpdate);
         // then
-        User user = testContainer.userReadService.getById(1);
+        User user = testContainer.userService.getById(1);
         assertThat(user.getId()).isNotNull();
         assertThat(user.getNickname()).isEqualTo("ohyoungsoo12");
         assertThat(user.getAddress()).isEqualTo("Seoul Nowon");
@@ -115,9 +115,9 @@ class UserServiceTest {
     void login_테스트_마지막_로그인시간_저장() {
         // given
         // when
-        testContainer.userAuthenticationService.login(1);
+        testContainer.userService.login(1);
         // then
-        User user = testContainer.userReadService.getById(1);
+        User user = testContainer.userService.getById(1);
         assertThat(user.getLastLoginAt()).isEqualTo(1678530673958L);
     }
 
@@ -125,9 +125,9 @@ class UserServiceTest {
     void PENDING_상태의_유저는_이메일_인증을_통해_ACTIVE_상태로_변경할수있다() {
         // given
         // when
-        testContainer.userAuthenticationService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        testContainer.userService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
         // then
-        User user = testContainer.userReadService.getById(2);
+        User user = testContainer.userService.getById(2);
         assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
     }
 
@@ -136,7 +136,7 @@ class UserServiceTest {
         // given
         // when
         // then
-        assertThatThrownBy(() -> testContainer.userAuthenticationService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab"))
+        assertThatThrownBy(() -> testContainer.userService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab"))
                 .isInstanceOf(CertificationCodeNotMatchedException.class);
     }
 }

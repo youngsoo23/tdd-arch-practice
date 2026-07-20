@@ -1,7 +1,7 @@
 package com.study.tddarchpractice.user.controller;
 
 
-import com.study.tddarchpractice.user.controller.port.UserCreateService;
+import com.study.tddarchpractice.user.controller.port.UserService;
 import com.study.tddarchpractice.user.domain.User;
 import com.study.tddarchpractice.user.domain.UserCreate;
 import com.study.tddarchpractice.user.controller.response.UserResponse;
@@ -22,11 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserCreateController {
 
     private final UserController userController;
-    private final UserCreateService userCreateService;
+    private final UserService userService;
 
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody UserCreate userCreate) {
-        User user = userCreateService.create(userCreate);
+        User user = userService.create(userCreate);
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(UserResponse.from(user));

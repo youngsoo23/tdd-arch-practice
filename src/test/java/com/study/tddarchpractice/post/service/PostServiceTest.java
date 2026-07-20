@@ -40,7 +40,7 @@ class PostServiceTest {
                 .createdAt(1678530673958L)
                 .build());
         // when
-        Post result = testContainer.postReadService.getById(post.getId());
+        Post result = testContainer.postService.getById(post.getId());
         // then
         assertThat(result.getContent()).isEqualTo("This is the content of the first post.");
     }
@@ -50,7 +50,7 @@ class PostServiceTest {
         // given
         // when
         // then
-        assertThatThrownBy(() -> testContainer.postReadService.getById(1))
+        assertThatThrownBy(() -> testContainer.postService.getById(1))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -62,7 +62,7 @@ class PostServiceTest {
                 .content("This is a new post.")
                 .build();
         // when
-        Post post = testContainer.postCreateService.create(postCreate);
+        Post post = testContainer.postService.create(postCreate);
         // then
         assertThat(post.getId()).isNotNull();
         assertThat(post.getContent()).isEqualTo("This is a new post.");
@@ -78,7 +78,7 @@ class PostServiceTest {
                 .build();
         // when
         // then
-        assertThatThrownBy(() -> testContainer.postCreateService.create(postCreate))
+        assertThatThrownBy(() -> testContainer.postService.create(postCreate))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -92,7 +92,7 @@ class PostServiceTest {
                 .createdAt(1678530673958L)
                 .build());
         // when
-        Post result = testContainer.postUpdateService.update(post.getId(), new PostUpdate("This is an updated post."));
+        Post result = testContainer.postService.update(post.getId(), new PostUpdate("This is an updated post."));
         // then
         assertThat(result.getContent()).isEqualTo("This is an updated post.");
     }

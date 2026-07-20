@@ -4,16 +4,11 @@ import com.study.tddarchpractice.common.service.port.ClockHolder;
 import com.study.tddarchpractice.common.service.port.UuidHolder;
 import com.study.tddarchpractice.post.controller.PostController;
 import com.study.tddarchpractice.post.controller.PostCreateController;
-import com.study.tddarchpractice.post.service.PostCreateServiceImpl;
-import com.study.tddarchpractice.post.service.PostReadServiceImpl;
-import com.study.tddarchpractice.post.service.PostUpdateServiceImpl;
+import com.study.tddarchpractice.post.service.PostServiceImpl;
 import com.study.tddarchpractice.user.controller.UserController;
 import com.study.tddarchpractice.user.controller.UserCreateController;
 import com.study.tddarchpractice.user.service.CertificationService;
-import com.study.tddarchpractice.user.service.UserAuthenticationServiceImpl;
-import com.study.tddarchpractice.user.service.UserCreateServiceImpl;
-import com.study.tddarchpractice.user.service.UserReadServiceImpl;
-import com.study.tddarchpractice.user.service.UserUpdateServiceImpl;
+import com.study.tddarchpractice.user.service.UserServiceImpl;
 import lombok.Builder;
 
 /**
@@ -29,14 +24,8 @@ public class TestContainer {
     public final UuidHolder uuidHolder;
 
     public final CertificationService certificationService;
-    public final UserReadServiceImpl userReadService;
-    public final UserCreateServiceImpl userCreateService;
-    public final UserUpdateServiceImpl userUpdateService;
-    public final UserAuthenticationServiceImpl userAuthenticationService;
-
-    public final PostReadServiceImpl postReadService;
-    public final PostCreateServiceImpl postCreateService;
-    public final PostUpdateServiceImpl postUpdateService;
+    public final UserServiceImpl userService;
+    public final PostServiceImpl postService;
 
     public final UserController userController;
     public final UserCreateController userCreateController;
@@ -52,24 +41,12 @@ public class TestContainer {
         this.clockHolder = clockHolder != null ? clockHolder : new TestClockHolder(1678530673958L);
 
         this.certificationService = new CertificationService(mailSender);
-        this.userReadService = new UserReadServiceImpl(userRepository);
-        this.userCreateService = new UserCreateServiceImpl(userRepository, certificationService, this.uuidHolder);
-        this.userUpdateService = new UserUpdateServiceImpl(userRepository, userReadService);
-        this.userAuthenticationService = new UserAuthenticationServiceImpl(userRepository, this.clockHolder);
+        this.userService = new UserServiceImpl(userRepository, certificationService, this.clockHolder, this.uuidHolder);
+        this.postService = new PostServiceImpl(postRepository, userRepository);
 
-        this.postReadService = new PostReadServiceImpl(postRepository);
-        this.postCreateService = PostCreateServiceImpl.builder()
-                .postRepository(postRepository)
-                .userRepository(userRepository)
-                .build();
-        this.postUpdateService = PostUpdateServiceImpl.builder()
-                .postRepository(postRepository)
-                .postReadService(postReadService)
-                .build();
-
-        this.userController = new UserController(userReadService, userUpdateService, userAuthenticationService);
-        this.userCreateController = new UserCreateController(userController, userCreateService);
-        this.postController = new PostController(postReadService, postUpdateService, userController);
-        this.postCreateController = new PostCreateController(postCreateService, postController);
+        this.userController = new UserController(userService);
+        this.userCreateController = new UserCreateController(userController, userService);
+        this.postController = new PostController(postService, userController);
+        this.postCreateController = new PostCreateController(postService, postController);
     }
 }
