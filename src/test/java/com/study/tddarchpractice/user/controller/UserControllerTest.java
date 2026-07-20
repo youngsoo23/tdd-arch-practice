@@ -1,6 +1,6 @@
 package com.study.tddarchpractice.user.controller;
 
-import com.study.tddarchpractice.mock.FakeUserService;
+import com.study.tddarchpractice.mock.TestContainer;
 import com.study.tddarchpractice.user.controller.response.MyProfileResponse;
 import com.study.tddarchpractice.user.controller.response.UserResponse;
 import com.study.tddarchpractice.user.domain.User;
@@ -15,15 +15,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class UserControllerTest {
 
-    private UserController userController;
-    private FakeUserService fakeUserService;
+    private TestContainer testContainer;
 
     @BeforeEach
     void init() {
-        fakeUserService = new FakeUserService();
-        userController = new UserController(fakeUserService);
+        testContainer = TestContainer.builder().build();
 
-        fakeUserService.save(User.builder()
+        testContainer.userRepository.save(User.builder()
                 .id(1L)
                 .email("oh.youngsoo23@gmail.com")
                 .nickname("ohyoungsoo")
@@ -32,7 +30,7 @@ class UserControllerTest {
                 .status(UserStatus.ACTIVE)
                 .build());
 
-        fakeUserService.save(User.builder()
+        testContainer.userRepository.save(User.builder()
                 .id(2L)
                 .email("oh.youngsoo223@gmail.com")
                 .nickname("ohyoungsoo2")
@@ -46,7 +44,7 @@ class UserControllerTest {
     void getUserById는_유저를_조회할수있다() {
         // given
         // when
-        ResponseEntity<UserResponse> response = userController.getUserById(1);
+        ResponseEntity<UserResponse> response = testContainer.userController.getUserById(1);
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getNickname()).isEqualTo("ohyoungsoo");
@@ -56,20 +54,20 @@ class UserControllerTest {
     void verifyEmail은_인증코드가_일치하면_302로_응답한다() {
         // given
         // when
-        ResponseEntity<Void> response = userController.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        ResponseEntity<Void> response = testContainer.userController.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        assertThat(fakeUserService.getById(2).getStatus()).isEqualTo(UserStatus.ACTIVE);
+        assertThat(testContainer.userRepository.getById(2).getStatus()).isEqualTo(UserStatus.ACTIVE);
     }
 
     @Test
     void getMyInfo는_EMAIL_헤더로_내정보를_조회하고_로그인시간을_갱신한다() {
         // given
         // when
-        ResponseEntity<MyProfileResponse> response = userController.getMyInfo("oh.youngsoo23@gmail.com");
+        ResponseEntity<MyProfileResponse> response = testContainer.userController.getMyInfo("oh.youngsoo23@gmail.com");
         // then
         assertThat(response.getBody().getNickname()).isEqualTo("ohyoungsoo");
-        assertThat(fakeUserService.getById(1).getLastLoginAt()).isEqualTo(1678530673958L);
+        assertThat(testContainer.userRepository.getById(1).getLastLoginAt()).isEqualTo(1678530673958L);
     }
 
     @Test
@@ -80,7 +78,7 @@ class UserControllerTest {
                 .address("Seoul Nowon")
                 .build();
         // when
-        ResponseEntity<MyProfileResponse> response = userController.updateMyInfo("oh.youngsoo23@gmail.com", userUpdate);
+        ResponseEntity<MyProfileResponse> response = testContainer.userController.updateMyInfo("oh.youngsoo23@gmail.com", userUpdate);
         // then
         assertThat(response.getBody().getNickname()).isEqualTo("ohyoungsoo12");
         assertThat(response.getBody().getAddress()).isEqualTo("Seoul Nowon");

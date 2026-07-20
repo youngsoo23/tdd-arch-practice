@@ -1,6 +1,6 @@
 package com.study.tddarchpractice.post.controller;
 
-import com.study.tddarchpractice.mock.FakePostService;
+import com.study.tddarchpractice.mock.TestContainer;
 import com.study.tddarchpractice.post.controller.response.PostResponse;
 import com.study.tddarchpractice.post.domain.PostCreate;
 import com.study.tddarchpractice.user.domain.User;
@@ -14,15 +14,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class PostCreateControllerTest {
 
-    private PostCreateController postCreateController;
-    private FakePostService fakePostService;
+    private TestContainer testContainer;
 
     @BeforeEach
     void init() {
-        fakePostService = new FakePostService();
-        postCreateController = new PostCreateController(fakePostService, null);
+        testContainer = TestContainer.builder().build();
 
-        fakePostService.addWriter(User.builder()
+        testContainer.userRepository.save(User.builder()
                 .id(1L)
                 .email("oh.youngsoo23@gmail.com")
                 .nickname("ohyoungsoo")
@@ -40,7 +38,7 @@ class PostCreateControllerTest {
                 .content("This is a new post.")
                 .build();
         // when
-        ResponseEntity<PostResponse> response = postCreateController.createPost(postCreate);
+        ResponseEntity<PostResponse> response = testContainer.postCreateController.createPost(postCreate);
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody().getContent()).isEqualTo("This is a new post.");

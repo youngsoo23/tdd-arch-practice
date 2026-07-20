@@ -3,7 +3,9 @@ package com.study.tddarchpractice.medium;
 import com.study.tddarchpractice.post.domain.Post;
 import com.study.tddarchpractice.post.domain.PostCreate;
 import com.study.tddarchpractice.post.domain.PostUpdate;
-import com.study.tddarchpractice.post.service.PostServiceImpl;
+import com.study.tddarchpractice.post.service.PostCreateServiceImpl;
+import com.study.tddarchpractice.post.service.PostReadServiceImpl;
+import com.study.tddarchpractice.post.service.PostUpdateServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,13 +24,19 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class PostServiceTest {
 
     @Autowired
-    private PostServiceImpl postService;
+    private PostReadServiceImpl postReadService;
+
+    @Autowired
+    private PostCreateServiceImpl postCreateService;
+
+    @Autowired
+    private PostUpdateServiceImpl postUpdateService;
 
     @Test
     void getById는_존재는_게시물을_내려준다() {
         // given
         // when
-        Post post = postService.getById(1);
+        Post post = postReadService.getById(1);
         // then
         assertThat(post.getContent())
                 .isEqualTo("This is the content of the first post.");
@@ -42,7 +50,7 @@ public class PostServiceTest {
                 .content("This is a new post.")
                 .build();
         // when
-        Post post = postService.create(postCreate);
+        Post post = postCreateService.create(postCreate);
         // then
         assertThat(post.getId()).isNotNull();
         assertThat(post.getContent()).isEqualTo("This is a new post.");
@@ -52,7 +60,7 @@ public class PostServiceTest {
     void update는_게시물을_수정한다() {
         // given
         // when
-        Post post = postService.update(1, new PostUpdate( "This is an updated post."));
+        Post post = postUpdateService.update(1, new PostUpdate( "This is an updated post."));
         // then
         assertThat(post.getContent())
                 .isEqualTo("This is an updated post.");

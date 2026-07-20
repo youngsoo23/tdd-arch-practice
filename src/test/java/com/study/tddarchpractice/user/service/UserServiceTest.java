@@ -2,10 +2,7 @@ package com.study.tddarchpractice.user.service;
 
 import com.study.tddarchpractice.common.domain.exception.CertificationCodeNotMatchedException;
 import com.study.tddarchpractice.common.domain.exception.ResourceNotFoundException;
-import com.study.tddarchpractice.mock.FakeMailSenderTest;
-import com.study.tddarchpractice.mock.FakeUserRepository;
-import com.study.tddarchpractice.mock.TestClockHolder;
-import com.study.tddarchpractice.mock.TestUuidHolder;
+import com.study.tddarchpractice.mock.TestContainer;
 import com.study.tddarchpractice.user.domain.User;
 import com.study.tddarchpractice.user.domain.UserCreate;
 import com.study.tddarchpractice.user.domain.UserStatus;
@@ -18,23 +15,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class UserServiceTest {
 
-    private UserServiceImpl userService;
-    private FakeUserRepository fakeUserRepository;
-    private FakeMailSenderTest fakeMailSenderTest;
+    private TestContainer testContainer;
 
     @BeforeEach
     void init() {
-        fakeUserRepository = new FakeUserRepository();
-        fakeMailSenderTest = new FakeMailSenderTest();
-        CertificationService certificationService = new CertificationService(fakeMailSenderTest);
-        userService = new UserServiceImpl(
-                fakeUserRepository,
-                certificationService,
-                new TestClockHolder(1678530673958L),
-                new TestUuidHolder("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
-        );
+        testContainer = TestContainer.builder().build();
 
-        fakeUserRepository.save(User.builder()
+        testContainer.userRepository.save(User.builder()
                 .id(1L)
                 .email("oh.youngsoo23@gmail.com")
                 .nickname("ohyoungsoo")
@@ -42,7 +29,7 @@ class UserServiceTest {
                 .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
                 .status(UserStatus.ACTIVE)
                 .build());
-        fakeUserRepository.save(User.builder()
+        testContainer.userRepository.save(User.builder()
                 .id(2L)
                 .email("oh.youngsoo223@gmail.com")
                 .nickname("ohyoungsoo2")
@@ -57,7 +44,7 @@ class UserServiceTest {
         // given
         String email = "oh.youngsoo23@gmail.com";
         // when
-        User user = userService.getByEmail(email);
+        User user = testContainer.userReadService.getByEmail(email);
         // then
         assertThat(user.getNickname()).isEqualTo("ohyoungsoo");
     }
@@ -68,7 +55,7 @@ class UserServiceTest {
         String email = "oh.youngsoo223@gmail.com";
         // when
         // then
-        assertThatThrownBy(() -> userService.getByEmail(email))
+        assertThatThrownBy(() -> testContainer.userReadService.getByEmail(email))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -76,7 +63,7 @@ class UserServiceTest {
     void getById는_ACTIVE_상태의_유저를_조회할수있다() {
         // given
         // when
-        User user = userService.getById(1);
+        User user = testContainer.userReadService.getById(1);
         // then
         assertThat(user.getNickname()).isEqualTo("ohyoungsoo");
     }
@@ -86,7 +73,7 @@ class UserServiceTest {
         // given
         // when
         // then
-        assertThatThrownBy(() -> userService.getById(2))
+        assertThatThrownBy(() -> testContainer.userReadService.getById(2))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -99,13 +86,13 @@ class UserServiceTest {
                 .address("Seoul")
                 .build();
         // when
-        User user = userService.create(userCreate);
+        User user = testContainer.userCreateService.create(userCreate);
         // then
         assertThat(user.getId()).isNotNull();
         assertThat(user.getStatus()).isEqualTo(UserStatus.PENDING);
         assertThat(user.getCertificationCode()).isEqualTo("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
-        assertThat(fakeMailSenderTest.email).isEqualTo("oh.youngsoo234@gmail.com");
-        assertThat(fakeMailSenderTest.subject).isEqualTo("Please certify your email address");
+        assertThat(testContainer.mailSender.email).isEqualTo("oh.youngsoo234@gmail.com");
+        assertThat(testContainer.mailSender.subject).isEqualTo("Please certify your email address");
     }
 
     @Test
@@ -116,9 +103,9 @@ class UserServiceTest {
                 .address("Seoul Nowon")
                 .build();
         // when
-        userService.update(1, userUpdate);
+        testContainer.userUpdateService.update(1, userUpdate);
         // then
-        User user = userService.getById(1);
+        User user = testContainer.userReadService.getById(1);
         assertThat(user.getId()).isNotNull();
         assertThat(user.getNickname()).isEqualTo("ohyoungsoo12");
         assertThat(user.getAddress()).isEqualTo("Seoul Nowon");
@@ -128,9 +115,9 @@ class UserServiceTest {
     void login_테스트_마지막_로그인시간_저장() {
         // given
         // when
-        userService.login(1);
+        testContainer.userAuthenticationService.login(1);
         // then
-        User user = userService.getById(1);
+        User user = testContainer.userReadService.getById(1);
         assertThat(user.getLastLoginAt()).isEqualTo(1678530673958L);
     }
 
@@ -138,9 +125,9 @@ class UserServiceTest {
     void PENDING_상태의_유저는_이메일_인증을_통해_ACTIVE_상태로_변경할수있다() {
         // given
         // when
-        userService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        testContainer.userAuthenticationService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
         // then
-        User user = userService.getById(2);
+        User user = testContainer.userReadService.getById(2);
         assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
     }
 
@@ -149,7 +136,7 @@ class UserServiceTest {
         // given
         // when
         // then
-        assertThatThrownBy(() -> userService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab"))
+        assertThatThrownBy(() -> testContainer.userAuthenticationService.verifyEmail(2, "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab"))
                 .isInstanceOf(CertificationCodeNotMatchedException.class);
     }
 }

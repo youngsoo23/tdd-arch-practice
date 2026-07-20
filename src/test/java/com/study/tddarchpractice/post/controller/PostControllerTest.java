@@ -1,6 +1,6 @@
 package com.study.tddarchpractice.post.controller;
 
-import com.study.tddarchpractice.mock.FakePostService;
+import com.study.tddarchpractice.mock.TestContainer;
 import com.study.tddarchpractice.post.controller.response.PostResponse;
 import com.study.tddarchpractice.post.domain.Post;
 import com.study.tddarchpractice.post.domain.PostUpdate;
@@ -14,13 +14,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class PostControllerTest {
 
-    private PostController postController;
-    private FakePostService fakePostService;
+    private TestContainer testContainer;
 
     @BeforeEach
     void init() {
-        fakePostService = new FakePostService();
-        postController = new PostController(fakePostService, null);
+        testContainer = TestContainer.builder().build();
     }
 
     @Test
@@ -34,13 +32,13 @@ class PostControllerTest {
                 .status(UserStatus.ACTIVE)
                 .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
                 .build();
-        Post post = fakePostService.save(Post.builder()
+        Post post = testContainer.postRepository.save(Post.builder()
                 .content("This is the content of the first post.")
                 .writer(writer)
                 .createdAt(1678530673958L)
                 .build());
         // when
-        ResponseEntity<PostResponse> response = postController.getPostById(post.getId());
+        ResponseEntity<PostResponse> response = testContainer.postController.getPostById(post.getId());
         // then
         assertThat(response.getBody().getContent()).isEqualTo("This is the content of the first post.");
     }
@@ -56,13 +54,13 @@ class PostControllerTest {
                 .status(UserStatus.ACTIVE)
                 .certificationCode("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
                 .build();
-        Post post = fakePostService.save(Post.builder()
+        Post post = testContainer.postRepository.save(Post.builder()
                 .content("This is the content of the first post.")
                 .writer(writer)
                 .createdAt(1678530673958L)
                 .build());
         // when
-        ResponseEntity<PostResponse> response = postController.updatePost(post.getId(), new PostUpdate("This is an updated post."));
+        ResponseEntity<PostResponse> response = testContainer.postController.updatePost(post.getId(), new PostUpdate("This is an updated post."));
         // then
         assertThat(response.getBody().getContent()).isEqualTo("This is an updated post.");
     }

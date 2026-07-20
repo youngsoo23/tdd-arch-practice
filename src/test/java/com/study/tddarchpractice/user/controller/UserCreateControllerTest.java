@@ -1,6 +1,6 @@
 package com.study.tddarchpractice.user.controller;
 
-import com.study.tddarchpractice.mock.FakeUserService;
+import com.study.tddarchpractice.mock.TestContainer;
 import com.study.tddarchpractice.user.controller.response.UserResponse;
 import com.study.tddarchpractice.user.domain.UserCreate;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,13 +12,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class UserCreateControllerTest {
 
-    private UserCreateController userCreateController;
-    private FakeUserService fakeUserService;
+    private TestContainer testContainer;
 
     @BeforeEach
     void init() {
-        fakeUserService = new FakeUserService();
-        userCreateController = new UserCreateController(null, fakeUserService);
+        testContainer = TestContainer.builder().build();
     }
 
     @Test
@@ -30,7 +28,7 @@ class UserCreateControllerTest {
                 .address("Seoul")
                 .build();
         // when
-        ResponseEntity<UserResponse> response = userCreateController.createUser(userCreate);
+        ResponseEntity<UserResponse> response = testContainer.userCreateController.createUser(userCreate);
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody().getNickname()).isEqualTo("ohyoungsoo");

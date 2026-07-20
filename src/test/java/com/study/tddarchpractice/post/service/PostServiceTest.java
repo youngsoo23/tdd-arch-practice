@@ -1,18 +1,12 @@
 package com.study.tddarchpractice.post.service;
 
 import com.study.tddarchpractice.common.domain.exception.ResourceNotFoundException;
-import com.study.tddarchpractice.mock.FakeMailSenderTest;
-import com.study.tddarchpractice.mock.FakePostRepository;
-import com.study.tddarchpractice.mock.FakeUserRepository;
-import com.study.tddarchpractice.mock.TestClockHolder;
-import com.study.tddarchpractice.mock.TestUuidHolder;
+import com.study.tddarchpractice.mock.TestContainer;
 import com.study.tddarchpractice.post.domain.Post;
 import com.study.tddarchpractice.post.domain.PostCreate;
 import com.study.tddarchpractice.post.domain.PostUpdate;
 import com.study.tddarchpractice.user.domain.User;
 import com.study.tddarchpractice.user.domain.UserStatus;
-import com.study.tddarchpractice.user.service.CertificationService;
-import com.study.tddarchpractice.user.service.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,26 +15,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class PostServiceTest {
 
-    private PostServiceImpl postService;
-    private FakePostRepository fakePostRepository;
-    private FakeUserRepository fakeUserRepository;
+    private TestContainer testContainer;
 
     @BeforeEach
     void init() {
-        fakePostRepository = new FakePostRepository();
-        fakeUserRepository = new FakeUserRepository();
-        CertificationService certificationService = new CertificationService(new FakeMailSenderTest());
-        UserServiceImpl userService = new UserServiceImpl(
-                fakeUserRepository,
-                certificationService,
-                new TestClockHolder(1678530673958L),
-                new TestUuidHolder("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
-        );
-        postService = PostServiceImpl.builder()
-                .postRepository(fakePostRepository)
-                .userRepository(fakeUserRepository)
-                .build();
-        fakeUserRepository.save(User.builder()
+        testContainer = TestContainer.builder().build();
+        testContainer.userRepository.save(User.builder()
                 .id(1L)
                 .email("oh.youngsoo23@gmail.com")
                 .nickname("ohyoungsoo")
@@ -53,14 +33,14 @@ class PostServiceTest {
     @Test
     void getById는_존재하는_게시물을_내려준다() {
         // given
-        User writer = fakeUserRepository.findById(1).get();
-        Post post = fakePostRepository.save(Post.builder()
+        User writer = testContainer.userRepository.findById(1).get();
+        Post post = testContainer.postRepository.save(Post.builder()
                 .content("This is the content of the first post.")
                 .writer(writer)
                 .createdAt(1678530673958L)
                 .build());
         // when
-        Post result = postService.getById(post.getId());
+        Post result = testContainer.postReadService.getById(post.getId());
         // then
         assertThat(result.getContent()).isEqualTo("This is the content of the first post.");
     }
@@ -70,7 +50,7 @@ class PostServiceTest {
         // given
         // when
         // then
-        assertThatThrownBy(() -> postService.getById(1))
+        assertThatThrownBy(() -> testContainer.postReadService.getById(1))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -82,7 +62,7 @@ class PostServiceTest {
                 .content("This is a new post.")
                 .build();
         // when
-        Post post = postService.create(postCreate);
+        Post post = testContainer.postCreateService.create(postCreate);
         // then
         assertThat(post.getId()).isNotNull();
         assertThat(post.getContent()).isEqualTo("This is a new post.");
@@ -98,21 +78,21 @@ class PostServiceTest {
                 .build();
         // when
         // then
-        assertThatThrownBy(() -> postService.create(postCreate))
+        assertThatThrownBy(() -> testContainer.postCreateService.create(postCreate))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
     @Test
     void update는_게시물을_수정한다() {
         // given
-        User writer = fakeUserRepository.findById(1).get();
-        Post post = fakePostRepository.save(Post.builder()
+        User writer = testContainer.userRepository.findById(1).get();
+        Post post = testContainer.postRepository.save(Post.builder()
                 .content("This is the content of the first post.")
                 .writer(writer)
                 .createdAt(1678530673958L)
                 .build());
         // when
-        Post result = postService.update(post.getId(), new PostUpdate("This is an updated post."));
+        Post result = testContainer.postUpdateService.update(post.getId(), new PostUpdate("This is an updated post."));
         // then
         assertThat(result.getContent()).isEqualTo("This is an updated post.");
     }

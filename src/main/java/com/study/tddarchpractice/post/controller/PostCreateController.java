@@ -1,7 +1,7 @@
 package com.study.tddarchpractice.post.controller;
 
 
-import com.study.tddarchpractice.post.controller.port.PostService;
+import com.study.tddarchpractice.post.controller.port.PostCreateService;
 import com.study.tddarchpractice.post.domain.Post;
 import com.study.tddarchpractice.post.domain.PostCreate;
 import com.study.tddarchpractice.post.controller.response.PostResponse;
@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PostCreateController {
 
-    private final PostService postService;
+    private final PostCreateService postCreateService;
     private final PostController postController;
 
     @PostMapping
     public ResponseEntity<PostResponse> createPost(@RequestBody PostCreate postCreate) {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(PostResponse.from(postService.create(postCreate)));
+            .body(PostResponse.from(postCreateService.create(postCreate)));
     }
 }

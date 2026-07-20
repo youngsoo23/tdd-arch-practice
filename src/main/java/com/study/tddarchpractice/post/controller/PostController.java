@@ -1,7 +1,8 @@
 package com.study.tddarchpractice.post.controller;
 
 
-import com.study.tddarchpractice.post.controller.port.PostService;
+import com.study.tddarchpractice.post.controller.port.PostReadService;
+import com.study.tddarchpractice.post.controller.port.PostUpdateService;
 import com.study.tddarchpractice.post.domain.Post;
 import com.study.tddarchpractice.user.controller.UserController;
 import com.study.tddarchpractice.post.controller.response.PostResponse;
@@ -18,21 +19,22 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostService postService;
+    private final PostReadService postReadService;
+    private final PostUpdateService postUpdateService;
     private final UserController userController;
 
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getPostById(@PathVariable long id) {
         return ResponseEntity
             .ok()
-            .body(PostResponse.from(postService.getById(id)));
+            .body(PostResponse.from(postReadService.getById(id)));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<PostResponse> updatePost(@PathVariable long id, @RequestBody PostUpdate postUpdate) {
         return ResponseEntity
             .ok()
-            .body(PostResponse.from(postService.update(id, postUpdate)));
+            .body(PostResponse.from(postUpdateService.update(id, postUpdate)));
     }
 
 
