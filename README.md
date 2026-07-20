@@ -126,8 +126,8 @@ export MAIL_APPLICATION_PASSWORD=your_gmail_app_password
 | 소형 (Fake 기반) | `user/service`, `post/service`, `user/controller`, `post/controller` | 서비스/컨트롤러를 생성자에 `Fake*Repository`, `Fake*Service` 등을 직접 주입해 생성, Spring 컨텍스트 없음 | 빠르고 결정론적, DB/메일 서버 불필요 |
 | 중형 (통합) | `medium/*` | `@SpringBootTest` + `@Sql`로 실데이터 세팅, `MockMvc`로 HTTP 계층까지 검증 | 실제 JPA 매핑·트랜잭션·쿼리까지 검증 |
 
-- 공용 Fake/테스트 더블은 `src/test/java/com/study/tddarchpractice/mock/`에 모여 있습니다: `FakeUserRepository`, `FakePostRepository`, `FakeUserService`, `FakePostService`, `FakeMailSenderTest`, `TestClockHolder`, `TestUuidHolder`.
-- 소형 테스트는 컨트롤러/서비스 인터페이스(포트)에만 의존하도록 설계되어 있기 때문에 실제 구현체(JPA, SMTP) 없이도 생성자 주입만으로 테스트가 가능합니다.
+- 공용 Fake/테스트 더블은 `src/test/java/com/study/tddarchpractice/mock/`에 모여 있습니다: `FakeUserRepository`, `FakePostRepository`, `FakeMailSenderTest`, `TestClockHolder`, `TestUuidHolder`. 이들을 조합해 실제 `UserServiceImpl`/`PostServiceImpl`/컨트롤러까지 한 번에 조립해주는 `TestContainer`도 같은 위치에 있습니다.
+- 소형 테스트는 컨트롤러/서비스 인터페이스(포트)에만 의존하도록 설계되어 있기 때문에 실제 구현체(JPA, SMTP) 없이도 `TestContainer.builder().build()` 한 줄로 테스트가 가능합니다.
 - 중형 테스트는 외부 연동(`JavaMailSender`)만 `@MockitoBean`으로 대체하고, 나머지는 실제 구성으로 띄워 검증합니다.
 - 테스트 전용 설정은 `src/test/resources/test-application.yml`을 사용합니다.
 - Mockito는 `build.gradle`의 `test` 태스크에서 `-javaagent`로 mockito-core를 명시적으로 주입해야 동작합니다(Spring Boot 4 / 최신 JDK 인라인 목킹 요구사항).
