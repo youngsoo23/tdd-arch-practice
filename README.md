@@ -51,7 +51,7 @@ src/main/java/com/study/tddarchpractice
         └── port                             # PostRepository (아웃바운드 포트)
 ```
 
-테스트 코드(`src/test/java`)도 동일한 패키지 구조를 유지하며, 계층별 단위/통합 테스트와 `@Sql`을 이용한 테스트 데이터 셋업 스크립트(`src/test/resources/sql`)를 포함합니다. 자세한 배경은 [`doc/why-this-project-matters.md`](doc/why-this-project-matters.md)를 참고하세요.
+테스트 코드(`src/test/java`)도 동일한 패키지 구조를 유지하며, 계층별 단위/통합 테스트와 `@Sql`을 이용한 테스트 데이터 셋업 스크립트(`src/test/resources/sql`)를 포함합니다. 자세한 배경은 [`doc/why-this-project-matters.md`](doc/why-this-project-matters.md)를, 테스트 범위·대상·작성 팁은 [`doc/testing-guide.md`](doc/testing-guide.md)를 참고하세요.
 
 ## 주요 기능
 
